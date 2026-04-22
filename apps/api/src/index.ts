@@ -1,4 +1,3 @@
-import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 
 const app = new Hono();
@@ -9,4 +8,8 @@ app.get('/health', (c) => {
 
 const port = Number(process.env.PORT ?? 3001);
 console.log(`API server starting on port ${port}`);
-serve({ fetch: app.fetch, port });
+
+export default {
+    port,
+    fetch: app.fetch,
+};
