@@ -6,7 +6,7 @@ patterns=(
   dist
   node_modules
   .turbo
-  *.tsbuildinfo
+  '*.tsbuildinfo'
   coverage
   junit.xml
 )

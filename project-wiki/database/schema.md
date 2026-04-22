@@ -27,8 +27,8 @@
 |--------|------|-------------|
 | id | uuid | PK, defaultRandom() |
 | user_id | uuid | NOT NULL (references Supabase auth) |
-| subdomain | varchar(63) | NOT NULL, UNIQUE |
-| custom_domain | varchar(253) | nullable, UNIQUE |
+| subdomain | varchar(63) | NOT NULL, UNIQUE (where deleted_at IS NULL) |
+| custom_domain | varchar(253) | nullable, UNIQUE (where deleted_at IS NULL) |
 | theme_id | uuid | NOT NULL, FK → themes.id |
 | plan | enum(free, pro) | NOT NULL, default 'free' |
 | created_at | timestamp | NOT NULL, defaultNow() |
@@ -50,7 +50,7 @@
 | modified_at | timestamp | NOT NULL, defaultNow() |
 | deleted_at | timestamp | nullable |
 
-**Unique index:** `(artist_id, provider)`
+**Unique index:** `(artist_id, provider)` **where deleted_at IS NULL**
 
 ### `content`
 
@@ -72,7 +72,7 @@
 | modified_at | timestamp | NOT NULL, defaultNow() |
 | deleted_at | timestamp | nullable |
 
-**Unique index:** `(artist_id, provider, external_id)`
+**Unique index:** `(artist_id, provider, external_id)` **where deleted_at IS NULL**
 
 ## Enums
 

@@ -1,4 +1,5 @@
 import { jsonb, pgEnum, pgTable, text, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm/sql';
 
 export const providerEnum = pgEnum('provider', ['instagram', 'tiktok', 'youtube', 'spotify', 'soundcloud']);
 
@@ -15,19 +16,26 @@ export const themes = pgTable('themes', {
     deletedAt: timestamp('deleted_at'),
 });
 
-export const artists = pgTable('artists', {
-    id: uuid('id').primaryKey().defaultRandom(),
-    userId: uuid('user_id').notNull(),
-    subdomain: varchar('subdomain', { length: 63 }).notNull(),
-    customDomain: varchar('custom_domain', { length: 253 }),
-    themeId: uuid('theme_id')
-        .notNull()
-        .references(() => themes.id),
-    plan: planEnum('plan').notNull().default('free'),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-    modifiedAt: timestamp('modified_at').notNull().defaultNow(),
-    deletedAt: timestamp('deleted_at'),
-});
+export const artists = pgTable(
+    'artists',
+    {
+        id: uuid('id').primaryKey().defaultRandom(),
+        userId: uuid('user_id').notNull(),
+        subdomain: varchar('subdomain', { length: 63 }).notNull(),
+        customDomain: varchar('custom_domain', { length: 253 }),
+        themeId: uuid('theme_id')
+            .notNull()
+            .references(() => themes.id),
+        plan: planEnum('plan').notNull().default('free'),
+        createdAt: timestamp('created_at').notNull().defaultNow(),
+        modifiedAt: timestamp('modified_at').notNull().defaultNow(),
+        deletedAt: timestamp('deleted_at'),
+    },
+    (table) => [
+        uniqueIndex('artists_subdomain_idx').on(table.subdomain).where(sql`deleted_at IS NULL`),
+        uniqueIndex('artists_custom_domain_idx').on(table.customDomain).where(sql`deleted_at IS NULL`),
+    ]
+);
 
 export const socialConnections = pgTable(
     'social_connections',
@@ -45,7 +53,11 @@ export const socialConnections = pgTable(
         modifiedAt: timestamp('modified_at').notNull().defaultNow(),
         deletedAt: timestamp('deleted_at'),
     },
-    (table) => [uniqueIndex('social_connections_artist_provider_idx').on(table.artistId, table.provider)]
+    (table) => [
+        uniqueIndex('social_connections_artist_provider_idx')
+            .on(table.artistId, table.provider)
+            .where(sql`deleted_at IS NULL`),
+    ]
 );
 
 export const content = pgTable(
@@ -70,6 +82,8 @@ export const content = pgTable(
         deletedAt: timestamp('deleted_at'),
     },
     (table) => [
-        uniqueIndex('content_artist_provider_external_idx').on(table.artistId, table.provider, table.externalId),
+        uniqueIndex('content_artist_provider_external_idx')
+            .on(table.artistId, table.provider, table.externalId)
+            .where(sql`deleted_at IS NULL`),
     ]
 );

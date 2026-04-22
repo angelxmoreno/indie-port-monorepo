@@ -48,5 +48,5 @@
 | CDN/DDoS | Cloudflare (free tier, in front of VPS) |
 
 ## Encryption
-- OAuth tokens: Supabase RLS + HTTPS for now
-- May add at-rest encryption later
+- OAuth tokens: at-rest encryption required (e.g., pgcrypto `pgp_sym_encrypt` or application-layer AES-GCM) before storing in DB
+- HTTPS in transit + RLS for access control; encryption is the storage-layer protection

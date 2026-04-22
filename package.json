@@ -1,6 +1,6 @@
 {
     "name": "indieport",
-    "packageManager": "bun@1.2.0",
+    "packageManager": "bun@1.3.0",
     "private": true,
     "engines": {
         "node": ">=22",
