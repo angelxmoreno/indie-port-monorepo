@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+patterns=(
+  build
+  dist
+  node_modules
+  .turbo
+  '*.tsbuildinfo'
+  coverage
+  junit.xml
+)
+
+paths=()
+
+for pattern in "${patterns[@]}"; do
+  paths+=("$pattern")
+  paths+=("apps"/*/"$pattern")
+  paths+=("packages"/*/"$pattern")
+
+done
+
+bunx rimraf "${paths[@]}"

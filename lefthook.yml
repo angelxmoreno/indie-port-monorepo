@@ -1,0 +1,24 @@
+pre-commit:
+  parallel: true
+  commands:
+    dups:
+      run: bun run dup:jsinspect:staged && bun run dup:jscpd:staged
+      skip:
+        - merge
+        - rebase
+    lint:
+      run: bun run lint
+      skip:
+        - merge
+        - rebase
+    types:
+      run: bun run type:check
+      skip:
+        - merge
+        - rebase
+commit-msg:
+  parallel: true
+  commands:
+    commitlint:
+      run: bunx commitlint --edit $1
+
