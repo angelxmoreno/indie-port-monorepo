@@ -1,5 +1,5 @@
 {
-    "$schema": "https://biomejs.dev/schemas/2.4.10/schema.json",
+    "$schema": "https://biomejs.dev/schemas/2.4.12/schema.json",
     "vcs": {
         "enabled": true,
         "clientKind": "git",
@@ -7,16 +7,7 @@
     },
     "files": {
         "ignoreUnknown": false,
-        "includes": [
-            "**",
-            "!**/node_modules",
-            "!**/dist",
-            "!**/build",
-            "!**/.astro",
-            "!**/.idea",
-            "!**/.turbo",
-            "!marketing-site"
-        ]
+        "includes": ["**", "!**/node_modules", "!**/dist", "!**/build", "!**/.astro", "!**/.idea", "!**/.turbo"]
     },
     "formatter": {
         "enabled": true,
@@ -29,6 +20,7 @@
         "rules": {
             "recommended": true,
             "correctness": {
+                "noUnusedVariables": "error",
                 "useImportExtensions": "off"
             }
         }

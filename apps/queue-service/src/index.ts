@@ -7,10 +7,10 @@ const connection = new IORedis({
     maxRetriesPerRequest: null,
 });
 
-const contentSyncQueue = new Queue('content-sync', { connection });
-const tokenRefreshQueue = new Queue('token-refresh', { connection });
+const _contentSyncQueue = new Queue('content-sync', { connection });
+const _tokenRefreshQueue = new Queue('token-refresh', { connection });
 
-const contentSyncWorker = new Worker(
+const _contentSyncWorker = new Worker(
     'content-sync',
     async (job) => {
         console.log(`Processing content sync for artist: ${job.data.artistId}`);
@@ -18,7 +18,7 @@ const contentSyncWorker = new Worker(
     { connection }
 );
 
-const tokenRefreshWorker = new Worker(
+const _tokenRefreshWorker = new Worker(
     'token-refresh',
     async (job) => {
         console.log(`Refreshing token for connection: ${job.data.connectionId}`);
