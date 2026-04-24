@@ -17,7 +17,7 @@
         "@indieport/database": "workspace:*",
         "@indieport/shared-be": "workspace:*",
         "@indieport/shared-types": "workspace:*",
-        "hono": "^4.7.0"
+        "hono": "^4.12.15"
     },
     "devDependencies": {
         "typescript": "^5.8.0",
