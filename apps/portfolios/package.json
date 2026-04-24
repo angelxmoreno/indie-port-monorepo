@@ -18,8 +18,8 @@
         "@indieport/database": "workspace:*",
         "@indieport/shared-types": "workspace:*",
         "@indieport/shared-fe": "workspace:*",
-        "astro": "^6.1.8",
-        "@astrojs/react": "^5.0.3",
+        "astro": "^6.1.9",
+        "@astrojs/react": "^5.0.4",
         "react": "^19.1.0",
         "react-dom": "^19.1.0"
     },
