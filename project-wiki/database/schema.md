@@ -2,11 +2,7 @@
 
 ## Conventions
 
-- All tables have `created_at`, `modified_at`, `deleted_at` columns
-- `deleted_at` is nullable — when set, the record is soft-deleted
-- `modified_at` is auto-updated on every change
-- All IDs are UUIDs generated with `defaultRandom()`
-- Unique constraints use composite indexes where appropriate
+See [conventions.md](conventions.md) for column standards, soft-delete rules, naming, and Zod-First conventions.
 
 ## Tables
 
