@@ -8,3 +8,4 @@ Multi-tenant portfolio app for indie artists. Artists sign up, pick a theme, con
 - [Database](database/schema.md) — Schema, conventions, ERD
 - [Decisions](decisions/tech-stack.md) — Tech stack, providers, payments, hosting
 - [Development](development/conventions.md) — Coding conventions, tooling, Zod-First approach
+- [Implementation](implementation/) — Implementation tickets in execution order
