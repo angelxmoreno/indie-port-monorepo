@@ -6,7 +6,7 @@ Build the public-facing marketing site for IndiePort — the landing page that e
 
 ## Context
 
-The marketing site is a static Astro site currently showing a placeholder `<h1>`. It needs proper pages (home, pricing, about), shared UI components from `shared-fe`, and SEO optimization. No auth or database access required — this is purely a static marketing site.
+The marketing site is a static Astro site currently showing a placeholder `<h1>`. It needs proper pages (home, pricing), shared UI components from `shared-fe`, and SEO optimization. No auth or database access required — this is purely a static marketing site.
 
 ## Files to Create
 

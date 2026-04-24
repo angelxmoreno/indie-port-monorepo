@@ -10,8 +10,6 @@ The dashboard is a Vite + React 19 SPA that communicates with the API. It curren
 
 ## Files to Create
 
-- `apps/dashboard/src/App.tsx` — replace placeholder with React Router setup
-- `apps/dashboard/src/main.tsx` — update entry point (already exists, may need auth provider wrapper)
 - `apps/dashboard/src/pages/Dashboard.tsx` — main dashboard home (overview of artist stats)
 - `apps/dashboard/src/pages/Connections.tsx` — manage social connections (connect/disconnect providers)
 - `apps/dashboard/src/pages/Content.tsx` — view synced content, filter by category/provider
@@ -26,8 +24,9 @@ The dashboard is a Vite + React 19 SPA that communicates with the API. It curren
 
 ## Files to Modify
 
+- `apps/dashboard/src/App.tsx` — replace placeholder with React Router setup and auth provider wrapper
+- `apps/dashboard/src/main.tsx` — add auth provider wrapper around app
 - `apps/dashboard/package.json` — add `react-router`, `@supabase/supabase-js`, `@indieport/shared-fe`, `@indieport/shared-types`
-- `apps/dashboard/src/App.tsx` — replace with routed app (currently placeholder)
 
 ## Files to Reference
 

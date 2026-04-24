@@ -10,15 +10,15 @@ The API currently has only `/health`. Artists need CRUD endpoints to manage thei
 
 ## Files to Create
 
-- `apps/api/src/routes/artists.ts` — `GET /artists/me` (current artist profile), `PATCH /artists/me` (update subdomain, custom domain, theme)
-- `apps/api/src/routes/connections.ts` — `GET /artists/me/connections` (list social connections), `DELETE /artists/me/connections/:id` (soft-delete a connection)
-- `apps/api/src/routes/content.ts` — `GET /artists/me/content` (list content, filterable by category and provider)
+- `apps/api/src/routes/artists.ts` — `GET /me` (current artist profile), `PATCH /me` (update subdomain, custom domain, theme)
+- `apps/api/src/routes/connections.ts` — `GET /me/connections` (list social connections), `DELETE /me/connections/:id` (soft-delete a connection)
+- `apps/api/src/routes/content.ts` — `GET /me/content` (list content, filterable by category and provider)
 - `apps/api/src/middleware/error-handler.ts` — global error handler for Hono with structured JSON error responses
 - `packages/shared-types/src/api/` — request/response Zod schemas for each endpoint
 
 ## Files to Modify
 
-- `apps/api/src/index.ts` — mount route groups (`/artists`, `/connections`, `/content`)
+- `apps/api/src/index.ts` — mount all artist routes under `/artists` prefix, so routes compose to `/artists/me`, `/artists/me/connections`, and `/artists/me/content`
 - `packages/shared-types/src/index.ts` — re-export API schemas
 
 ## Files to Reference
@@ -44,7 +44,7 @@ The API currently has only `/health`. Artists need CRUD endpoints to manage thei
 ```
 feat(api): implemented artist, connection, and content CRUD routes
 
-- Added /artists/me, /connections, and /content endpoints
+- Added /artists/me, /artists/me/connections, and /artists/me/content endpoints
 - All routes protected by Supabase auth middleware
 - Soft-delete on connection removal, filtered queries on content
 - Structured error responses via global error handler
