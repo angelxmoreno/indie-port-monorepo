@@ -1,0 +1,21 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "34020964f065013ec57d02fe0a320fc561d0b2f5",
+  "prompts": {
+    "6aa763603dbe5f02": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "278e1a50-cc6f-4b3e-a41a-42f8b6615f0e",
+        "model": "gemini-2.5-flash"
+      },
+      "human_author": "Angel S. Moreno",
+      "messages": [],
+      "total_additions": 6,
+      "total_deletions": 0,
+      "accepted_lines": 6,
+      "overriden_lines": 0
+    }
+  }
+}
