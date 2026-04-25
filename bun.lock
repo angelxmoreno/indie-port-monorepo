@@ -38,6 +38,8 @@
       "dependencies": {
         "@indieport/shared-fe": "workspace:*",
         "@indieport/shared-types": "workspace:*",
+        "@supabase/supabase-js": "^2.104.1",
+        "libphonenumber-js": "^1.12.42",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
         "react-router": "^7.5.0",
@@ -135,8 +137,10 @@
       "version": "0.0.0",
       "dependencies": {
         "@indieport/shared-types": "workspace:*",
+        "@supabase/supabase-js": "^2.104.1",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
+        "zustand": "^5.0.12",
       },
       "devDependencies": {
         "@types/bun": "^1.3.13",
@@ -1065,6 +1069,8 @@
 
     "lefthook-windows-x64": ["lefthook-windows-x64@2.1.6", "", { "os": "win32", "cpu": "x64" }, "sha512-q4z2n3xucLscoWiyMwFViEj3N8MDSkPulMwcJYuCYFHoPhP1h+icqNu7QRLGYj6AnVrCQweiUJY3Tb2X+GbD/A=="],
 
+    "libphonenumber-js": ["libphonenumber-js@1.12.42", "", {}, "sha512-oKQFPTibqQwZZkChCDVMFVJXMZdyJNqDWZWYNn8BgyAaK/6yFJEowxCY0RVFirRyWP63hMRuKlkSEd9qlvbWXg=="],
+
     "lightningcss": ["lightningcss@1.32.0", "", { "dependencies": { "detect-libc": "^2.0.3" }, "optionalDependencies": { "lightningcss-android-arm64": "1.32.0", "lightningcss-darwin-arm64": "1.32.0", "lightningcss-darwin-x64": "1.32.0", "lightningcss-freebsd-x64": "1.32.0", "lightningcss-linux-arm-gnueabihf": "1.32.0", "lightningcss-linux-arm64-gnu": "1.32.0", "lightningcss-linux-arm64-musl": "1.32.0", "lightningcss-linux-x64-gnu": "1.32.0", "lightningcss-linux-x64-musl": "1.32.0", "lightningcss-win32-arm64-msvc": "1.32.0", "lightningcss-win32-x64-msvc": "1.32.0" } }, "sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ=="],
 
     "lightningcss-android-arm64": ["lightningcss-android-arm64@1.32.0", "", { "os": "android", "cpu": "arm64" }, "sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg=="],
@@ -1620,6 +1626,8 @@
     "yocto-queue": ["yocto-queue@1.2.2", "", {}, "sha512-4LCcse/U2MHZ63HAJVE+v71o7yOdIe4cZ70Wpf8D/IyjDKYQLV5GD46B+hSTjJsvV5PztjvHoU580EftxjDZFQ=="],
 
     "zod": ["zod@4.3.6", "", {}, "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg=="],
+
+    "zustand": ["zustand@5.0.12", "", { "peerDependencies": { "@types/react": ">=18.0.0", "immer": ">=9.0.6", "react": ">=18.0.0", "use-sync-external-store": ">=1.2.0" }, "optionalPeers": ["@types/react", "immer", "react", "use-sync-external-store"] }, "sha512-i77ae3aZq4dhMlRhJVCYgMLKuSiZAaUPAct2AksxQ+gOtimhGMdXljRT21P5BNpeT4kXlLIckvkPM029OljD7g=="],
 
     "zwitch": ["zwitch@2.0.4", "", {}, "sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A=="],
 
