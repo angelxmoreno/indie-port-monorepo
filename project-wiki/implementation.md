@@ -5,9 +5,10 @@ Checklist for all implementation tickets. Mark each `[ ]` as `[x]` when complete
 ## Per-ticket workflow
 
 1. Implement ticket
-2. Run `/simplify` on all changes
-3. Run `/compact` to compress context
+2. Update this file and tick the checkbox for this ticket
+3. Run `/simplify` on all changes
 4. Generate commit message → `commit-message.md`, wait for review before committing
+5. Run `/compact` to compress context
 
 ---
 
