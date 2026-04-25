@@ -34,7 +34,7 @@ Phone-first authentication using Supabase Auth SMS OTP. No email/password login.
 4. FE sends JWT in `Authorization: Bearer <token>` header to API
 5. BE middleware verifies JWT, extracts `userId`
 6. BE checks if `artists` row exists for `userId` — if not, creates one (lazy provisioning)
-7. Artist row creation requires a default theme — seed migration must insert one
+7. Artist row created without a theme (themeId is nullable, assigned later)
 
 ## Key Decisions
 
@@ -84,7 +84,7 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - Invalid or expired tokens return 401 with clear error message
 - `bun run validate` passes with zero errors
 
-### Ticket C: Content Provider Interface
+### Ticket B: Content Provider Interface
 
 **Goal**: Define the `ContentProvider` interface in `shared-be` that all content providers implement. Covers OAuth flow, token exchange, token refresh, and content fetching.
 
@@ -109,7 +109,7 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - Each method has proper Zod-validated input/output types
 - `bun run validate` passes with zero errors
 
-### Ticket D: OAuth Token Encryption
+### Ticket C: OAuth Token Encryption
 
 **Goal**: Implement AES-256-GCM encryption/decryption helpers for OAuth tokens stored in `social_connections`.
 
@@ -126,7 +126,7 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - Ciphertext includes IV + auth tag for tamper detection
 - `bun run validate` passes with zero errors
 
-### Ticket E: Instagram OAuth Provider (implements ContentProvider)
+### Ticket D: Instagram OAuth Provider (implements ContentProvider)
 
 **Goal**: Implement the Instagram provider as the first `ContentProvider` implementation.
 
@@ -147,7 +147,7 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - `ContentProvider` interface is fully implemented
 - `bun run validate` passes with zero errors
 
-### Ticket F: Content Sync Worker (Instagram)
+### Ticket E: Content Sync Worker (Instagram)
 
 **Goal**: Implement `content.sync` BullMQ worker that fetches Instagram content and upserts into `content` table.
 
@@ -166,7 +166,7 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - Handles API errors and rate limits gracefully
 - `bun run validate` passes with zero errors
 
-### Ticket G: Token Refresh Worker (Instagram)
+### Ticket F: Token Refresh Worker (Instagram)
 
 **Goal**: Implement `token.refresh` BullMQ repeatable job for Instagram token refresh.
 
@@ -190,13 +190,13 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 
 | Existing Ticket | Change |
 |----------------|--------|
-| 02 — Supabase Auth | Replaced by Ticket B (now phone OTP, lazy artist provisioning) |
-| 03 — OAuth Token Encryption | Unchanged, now Ticket D |
-| 04 — Instagram OAuth | Now implements ContentProvider interface, Ticket E |
+| 02 — Supabase Auth | Replaced by Ticket A (now phone OTP, lazy artist provisioning) |
+| 03 — OAuth Token Encryption | Unchanged, now Ticket C |
+| 04 — Instagram OAuth | Now implements ContentProvider interface, Ticket D |
 | 05 — API CRUD Routes | Add lazy artist provisioning to auth middleware |
-| 06 — Content Sync | Unchanged, now Ticket F |
-| 07 — Token Refresh | Unchanged, now Ticket G |
-| 11 — Shared Packages | `shared-be` needs ContentProvider interface (Ticket C) |
+| 06 — Content Sync | Unchanged, now Ticket E |
+| 07 — Token Refresh | Unchanged, now Ticket F |
+| 11 — Shared Packages | `shared-be` needs ContentProvider interface (Ticket B) |
 
 ## Environment Variables Required
 
