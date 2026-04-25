@@ -41,16 +41,13 @@ Phone-first authentication using Supabase Auth SMS OTP. No email/password login.
 - **Auth method**: Phone OTP only. No email/password, no social login buttons.
 - **Lazy provisioning**: Artist row created on first authenticated request, not during signup.
 - **Content providers are not auth providers**: Instagram, TikTok, etc. are connected after signup for content pulling only.
-- **Default theme**: A seed migration inserts a default theme so artist auto-creation doesn't violate the `themeId` FK constraint.
+- **Default theme**: Not needed. `themeId` is nullable on the `artists` table. Artists can be created without a theme and assign one later.
 
 ## Schema Changes
 
-### New migration: default theme seed
+### `artists.themeId` — nullable
 
-```sql
-INSERT INTO themes (id, name, config)
-VALUES ('00000000-0000-0000-0000-000000000001', 'Default', '{}');
-```
+The `themeId` column on `artists` is nullable (no seed migration needed). Artist rows can be created during lazy provisioning without a theme, and the theme is assigned later via the dashboard.
 
 ### `social_connections` — no changes needed
 
@@ -62,21 +59,7 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 
 ## Implementation Tickets
 
-### Ticket A: Default Theme Seed Migration
-
-**Goal**: Add a migration that inserts a default theme so artist auto-creation has a valid `themeId`.
-
-**Files to Create**:
-- `packages/database/drizzle/0001_seed_default_theme.sql` — insert default theme
-
-**Files to Modify**: None
-
-**Acceptance Criteria**:
-- Migration inserts one row into `themes` with id `00000000-0000-0000-0000-000000000001`
-- `bun run db:generate` produces valid migration
-- `bun run validate` passes
-
-### Ticket B: Supabase Auth Phone Login Setup
+### Ticket A: Supabase Auth Phone Login Setup
 
 **Goal**: Configure Supabase Auth for phone OTP and create the FE auth state management.
 
@@ -97,7 +80,7 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - Unauthenticated requests to protected routes return 401
 - `/health` remains publicly accessible
 - Auth middleware extracts `userId` from valid Supabase JWTs
-- First authenticated request for a new user auto-creates an `artists` row with the default theme
+- First authenticated request for a new user auto-creates an `artists` row (themeId is nullable, assigned later)
 - Invalid or expired tokens return 401 with clear error message
 - `bun run validate` passes with zero errors
 

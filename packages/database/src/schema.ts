@@ -23,9 +23,7 @@ export const artists = pgTable(
         userId: uuid('user_id').notNull(),
         subdomain: varchar('subdomain', { length: 63 }).notNull(),
         customDomain: varchar('custom_domain', { length: 253 }),
-        themeId: uuid('theme_id')
-            .notNull()
-            .references(() => themes.id),
+        themeId: uuid('theme_id').references(() => themes.id),
         plan: planEnum('plan').notNull().default('free'),
         createdAt: timestamp('created_at').notNull().defaultNow(),
         modifiedAt: timestamp('modified_at').notNull().defaultNow(),
