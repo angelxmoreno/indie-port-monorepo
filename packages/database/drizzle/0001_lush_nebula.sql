@@ -1,0 +1,1 @@
+ALTER TABLE "artists" ALTER COLUMN "theme_id" DROP NOT NULL;

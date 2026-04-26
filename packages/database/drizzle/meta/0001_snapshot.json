@@ -1,0 +1,461 @@
+{
+    "id": "cf517b9c-ec9c-4e4c-a820-e9cb89d04e25",
+    "prevId": "d55536f4-e830-42b0-aa91-1a29a8824a8e",
+    "version": "7",
+    "dialect": "postgresql",
+    "tables": {
+        "public.artists": {
+            "name": "artists",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "primaryKey": true,
+                    "notNull": true,
+                    "default": "gen_random_uuid()"
+                },
+                "user_id": {
+                    "name": "user_id",
+                    "type": "uuid",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "subdomain": {
+                    "name": "subdomain",
+                    "type": "varchar(63)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "custom_domain": {
+                    "name": "custom_domain",
+                    "type": "varchar(253)",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "theme_id": {
+                    "name": "theme_id",
+                    "type": "uuid",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "plan": {
+                    "name": "plan",
+                    "type": "plan",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "'free'"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "modified_at": {
+                    "name": "modified_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "deleted_at": {
+                    "name": "deleted_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false
+                }
+            },
+            "indexes": {
+                "artists_subdomain_idx": {
+                    "name": "artists_subdomain_idx",
+                    "columns": [
+                        {
+                            "expression": "subdomain",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        }
+                    ],
+                    "isUnique": true,
+                    "where": "deleted_at IS NULL",
+                    "concurrently": false,
+                    "method": "btree",
+                    "with": {}
+                },
+                "artists_custom_domain_idx": {
+                    "name": "artists_custom_domain_idx",
+                    "columns": [
+                        {
+                            "expression": "custom_domain",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        }
+                    ],
+                    "isUnique": true,
+                    "where": "deleted_at IS NULL",
+                    "concurrently": false,
+                    "method": "btree",
+                    "with": {}
+                }
+            },
+            "foreignKeys": {
+                "artists_theme_id_themes_id_fk": {
+                    "name": "artists_theme_id_themes_id_fk",
+                    "tableFrom": "artists",
+                    "tableTo": "themes",
+                    "columnsFrom": ["theme_id"],
+                    "columnsTo": ["id"],
+                    "onDelete": "no action",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.content": {
+            "name": "content",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "primaryKey": true,
+                    "notNull": true,
+                    "default": "gen_random_uuid()"
+                },
+                "artist_id": {
+                    "name": "artist_id",
+                    "type": "uuid",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "provider": {
+                    "name": "provider",
+                    "type": "provider",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "category": {
+                    "name": "category",
+                    "type": "content_category",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "external_id": {
+                    "name": "external_id",
+                    "type": "varchar(255)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "url": {
+                    "name": "url",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "thumbnail_url": {
+                    "name": "thumbnail_url",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "title": {
+                    "name": "title",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "description": {
+                    "name": "description",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "metadata": {
+                    "name": "metadata",
+                    "type": "jsonb",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "published_at": {
+                    "name": "published_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "synced_at": {
+                    "name": "synced_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "modified_at": {
+                    "name": "modified_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "deleted_at": {
+                    "name": "deleted_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false
+                }
+            },
+            "indexes": {
+                "content_artist_provider_external_idx": {
+                    "name": "content_artist_provider_external_idx",
+                    "columns": [
+                        {
+                            "expression": "artist_id",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        },
+                        {
+                            "expression": "provider",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        },
+                        {
+                            "expression": "external_id",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        }
+                    ],
+                    "isUnique": true,
+                    "where": "deleted_at IS NULL",
+                    "concurrently": false,
+                    "method": "btree",
+                    "with": {}
+                }
+            },
+            "foreignKeys": {
+                "content_artist_id_artists_id_fk": {
+                    "name": "content_artist_id_artists_id_fk",
+                    "tableFrom": "content",
+                    "tableTo": "artists",
+                    "columnsFrom": ["artist_id"],
+                    "columnsTo": ["id"],
+                    "onDelete": "cascade",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.social_connections": {
+            "name": "social_connections",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "primaryKey": true,
+                    "notNull": true,
+                    "default": "gen_random_uuid()"
+                },
+                "artist_id": {
+                    "name": "artist_id",
+                    "type": "uuid",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "provider": {
+                    "name": "provider",
+                    "type": "provider",
+                    "typeSchema": "public",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "access_token": {
+                    "name": "access_token",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "refresh_token": {
+                    "name": "refresh_token",
+                    "type": "text",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "token_expires_at": {
+                    "name": "token_expires_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false
+                },
+                "scopes": {
+                    "name": "scopes",
+                    "type": "text[]",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "'{}'"
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "modified_at": {
+                    "name": "modified_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "deleted_at": {
+                    "name": "deleted_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false
+                }
+            },
+            "indexes": {
+                "social_connections_artist_provider_idx": {
+                    "name": "social_connections_artist_provider_idx",
+                    "columns": [
+                        {
+                            "expression": "artist_id",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        },
+                        {
+                            "expression": "provider",
+                            "isExpression": false,
+                            "asc": true,
+                            "nulls": "last"
+                        }
+                    ],
+                    "isUnique": true,
+                    "where": "deleted_at IS NULL",
+                    "concurrently": false,
+                    "method": "btree",
+                    "with": {}
+                }
+            },
+            "foreignKeys": {
+                "social_connections_artist_id_artists_id_fk": {
+                    "name": "social_connections_artist_id_artists_id_fk",
+                    "tableFrom": "social_connections",
+                    "tableTo": "artists",
+                    "columnsFrom": ["artist_id"],
+                    "columnsTo": ["id"],
+                    "onDelete": "cascade",
+                    "onUpdate": "no action"
+                }
+            },
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        },
+        "public.themes": {
+            "name": "themes",
+            "schema": "",
+            "columns": {
+                "id": {
+                    "name": "id",
+                    "type": "uuid",
+                    "primaryKey": true,
+                    "notNull": true,
+                    "default": "gen_random_uuid()"
+                },
+                "name": {
+                    "name": "name",
+                    "type": "varchar(100)",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "config": {
+                    "name": "config",
+                    "type": "jsonb",
+                    "primaryKey": false,
+                    "notNull": true
+                },
+                "created_at": {
+                    "name": "created_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "modified_at": {
+                    "name": "modified_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": true,
+                    "default": "now()"
+                },
+                "deleted_at": {
+                    "name": "deleted_at",
+                    "type": "timestamp",
+                    "primaryKey": false,
+                    "notNull": false
+                }
+            },
+            "indexes": {},
+            "foreignKeys": {},
+            "compositePrimaryKeys": {},
+            "uniqueConstraints": {},
+            "policies": {},
+            "checkConstraints": {},
+            "isRLSEnabled": false
+        }
+    },
+    "enums": {
+        "public.content_category": {
+            "name": "content_category",
+            "schema": "public",
+            "values": ["image", "video", "music"]
+        },
+        "public.plan": {
+            "name": "plan",
+            "schema": "public",
+            "values": ["free", "pro"]
+        },
+        "public.provider": {
+            "name": "provider",
+            "schema": "public",
+            "values": ["instagram", "tiktok", "youtube", "spotify", "soundcloud"]
+        }
+    },
+    "schemas": {},
+    "sequences": {},
+    "roles": {},
+    "policies": {},
+    "views": {},
+    "_meta": {
+        "columns": {},
+        "schemas": {},
+        "tables": {}
+    }
+}

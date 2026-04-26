@@ -1,7 +1,13 @@
-import { describe, expect, test } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
+import app from '../src/index';
 
-describe('@indieport/api', () => {
-    test('placeholder', () => {
-        expect(true).toBe(true);
+describe('GET /health', () => {
+    it('returns ok status', async () => {
+        const res = await app.fetch(new Request('http://localhost/health'));
+        expect(res.status).toBe(200);
+
+        const body = await res.json();
+        expect(body.status).toBe('ok');
+        expect(body.timestamp).toBeString();
     });
 });
