@@ -1,14 +1,9 @@
 import { beforeEach, describe, expect, it, mock } from 'bun:test';
 import { AuthError } from '@indieport/shared-be';
+import type { AuthMiddlewareDeps } from '../src/middleware/auth';
+import { authMiddleware } from '../src/middleware/auth';
 
-// Only mock verifyToken and getSupabase — keep real AuthError class
 const mockVerifyToken = mock<(token: string, client: unknown) => Promise<unknown>>();
-
-mock.module('@indieport/shared-be', () => ({
-    verifyToken: mockVerifyToken,
-    AuthError,
-    getSupabase: () => ({}),
-}));
 
 function createChainableMock(resolvedValue: unknown) {
     const chain = {
@@ -34,7 +29,6 @@ mock.module('@indieport/database', () => ({
 }));
 
 import { Hono } from 'hono';
-import { authMiddleware } from '../src/middleware/auth';
 import { onError } from '../src/middleware/error-handler';
 import type { Env } from '../src/types';
 
@@ -42,13 +36,16 @@ const { db: mockDb } = require('@indieport/database') as {
     db: { select: ReturnType<typeof mock>; insert: ReturnType<typeof mock> };
 };
 
-function createApp() {
+function createApp(deps?: AuthMiddlewareDeps) {
     const app = new Hono<Env>();
     app.onError(onError);
-    app.use('/api/*', authMiddleware);
+    app.use('/api/*', (c, next) => authMiddleware(c, next, deps));
     app.get('/api/test', (c) => {
         const user = c.get('user');
         return c.json({ userId: user.userId });
+    });
+    app.get('/api/me', (c) => {
+        return c.json(c.get('user'));
     });
     return app;
 }
@@ -83,7 +80,10 @@ describe('authMiddleware', () => {
     it('returns 401 when token verification fails', async () => {
         mockVerifyToken.mockRejectedValue(new AuthError('Token verification failed: Invalid token'));
 
-        const app = createApp();
+        const app = createApp({
+            verifyToken: mockVerifyToken,
+            getSupabase: () => ({}) as unknown as import('@supabase/supabase-js').SupabaseClient,
+        });
         const res = await app.request('/api/test', {
             headers: { Authorization: 'Bearer invalid-token' },
         });
@@ -98,7 +98,10 @@ describe('authMiddleware', () => {
         mockVerifyToken.mockResolvedValue(user);
         mockDb.select.mockImplementation(() => createChainableMock([{ id: 'existing-id' }]));
 
-        const app = createApp();
+        const app = createApp({
+            verifyToken: mockVerifyToken,
+            getSupabase: () => ({}) as unknown as import('@supabase/supabase-js').SupabaseClient,
+        });
         const res = await app.request('/api/test', {
             headers: { Authorization: 'Bearer valid-token' },
         });
@@ -116,11 +119,46 @@ describe('authMiddleware', () => {
             values: mock(() => Promise.resolve([])),
         }));
 
-        const app = createApp();
+        const app = createApp({
+            verifyToken: mockVerifyToken,
+            getSupabase: () => ({}) as unknown as import('@supabase/supabase-js').SupabaseClient,
+        });
         const res = await app.request('/api/test', {
             headers: { Authorization: 'Bearer valid-token' },
         });
         expect(res.status).toBe(200);
         expect(mockDb.insert).toHaveBeenCalled();
+    });
+});
+
+describe('GET /api/me', () => {
+    beforeEach(() => {
+        mockVerifyToken.mockReset();
+    });
+
+    it('returns 401 when no Authorization header', async () => {
+        const app = createApp();
+        const res = await app.request('/api/me');
+        expect(res.status).toBe(401);
+
+        const body = await res.json();
+        expect(body.error).toBe('Missing Authorization header');
+    });
+
+    it('returns 200 with user when token is valid', async () => {
+        const user = { userId: '123e4567-e89b-12d3-a456-426614174000', phone: '+1234567890' };
+        mockVerifyToken.mockResolvedValue(user);
+
+        const app = createApp({
+            verifyToken: mockVerifyToken,
+            getSupabase: () => ({}) as unknown as import('@supabase/supabase-js').SupabaseClient,
+        });
+        const res = await app.request('/api/me', {
+            headers: { Authorization: 'Bearer valid-token' },
+        });
+        expect(res.status).toBe(200);
+
+        const body = await res.json();
+        expect(body).toEqual(user);
     });
 });

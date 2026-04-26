@@ -4,7 +4,16 @@ import type { Context, Next } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import type { Env } from '../types';
 
-export async function authMiddleware(c: Context<Env>, next: Next) {
+export interface AuthMiddlewareDeps {
+    verifyToken: typeof verifyToken;
+    getSupabase: typeof getSupabase;
+}
+
+export async function authMiddleware(
+    c: Context<Env>,
+    next: Next,
+    deps: AuthMiddlewareDeps = { verifyToken, getSupabase }
+) {
     const authHeader = c.req.header('Authorization');
 
     if (!authHeader) {
@@ -18,7 +27,7 @@ export async function authMiddleware(c: Context<Env>, next: Next) {
     }
 
     try {
-        const user = await verifyToken(token, getSupabase());
+        const user = await deps.verifyToken(token, deps.getSupabase());
 
         await ensureArtistExists(user.userId);
 
@@ -38,7 +47,7 @@ async function ensureArtistExists(userId: string) {
     if (!existing) {
         await db.insert(artists).values({
             userId,
-            subdomain: userId.slice(0, 8),
+            subdomain: userId,
         });
     }
 }

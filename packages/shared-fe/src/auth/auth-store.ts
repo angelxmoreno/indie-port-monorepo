@@ -1,6 +1,6 @@
 import type { AuthenticatedUser } from '@indieport/shared-types';
 import { create } from 'zustand';
-import { ApiClient } from '../api/client';
+import { ApiClient, ApiError } from '../api/client';
 import { supabase } from './supabase-client';
 
 interface AuthState {
@@ -27,8 +27,12 @@ async function syncUserFromApi(): Promise<void> {
     try {
         const user = await apiClient.request<AuthenticatedUser>('/api/me');
         useAuth.setState({ user });
-    } catch {
-        // Keep existing user data if API call fails
+    } catch (err) {
+        if (err instanceof ApiError && err.status === 401) {
+            await useAuth.getState().signOut();
+            return;
+        }
+        // Keep existing user data for other errors
     }
 }
 

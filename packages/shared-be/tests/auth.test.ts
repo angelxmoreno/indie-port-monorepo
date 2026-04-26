@@ -1,13 +1,15 @@
-import { describe, expect, it, mock } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import { AuthError, verifyToken } from '../src/auth';
 
-function createMockClient(getUserResult: {
+type GetUserResult = {
     data: { user: { id: string; phone?: string | null } | null };
     error: { message: string; name: string } | null;
-}) {
+};
+
+function createMockClient(getUserResult: GetUserResult) {
     return {
         auth: {
-            getUser: mock(() => Promise.resolve(getUserResult)),
+            getUser: () => Promise.resolve(getUserResult),
         },
     } as unknown as import('@supabase/supabase-js').SupabaseClient;
 }
