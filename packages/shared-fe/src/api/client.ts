@@ -1,31 +1,39 @@
-import { useAuth } from '../auth';
+export type TokenFetcher = () => Promise<string | null | undefined>;
 
-const API_URL = import.meta.env.VITE_API_URL ?? '/api';
+export class ApiClient {
+    private readonly baseUrl: string;
+    private readonly tokenFetcher: TokenFetcher;
 
-export async function apiClient<T>(path: string, options: RequestInit = {}): Promise<T> {
-    const { accessToken } = useAuth.getState();
-
-    const headers = new Headers(options.headers);
-
-    if (accessToken) {
-        headers.set('Authorization', `Bearer ${accessToken}`);
+    constructor(baseUrl: string, tokenFetcher: TokenFetcher) {
+        this.baseUrl = baseUrl;
+        this.tokenFetcher = tokenFetcher;
     }
 
-    if (!headers.has('Content-Type') && options.body) {
-        headers.set('Content-Type', 'application/json');
+    async request<T>(path: string, options: RequestInit = {}): Promise<T> {
+        const token = await this.tokenFetcher();
+
+        const headers = new Headers(options.headers);
+
+        if (token) {
+            headers.set('Authorization', `Bearer ${token}`);
+        }
+
+        if (!headers.has('Content-Type') && options.body) {
+            headers.set('Content-Type', 'application/json');
+        }
+
+        const response = await fetch(`${this.baseUrl}${path}`, {
+            ...options,
+            headers,
+        });
+
+        if (!response.ok) {
+            const body = await response.json().catch(() => ({ error: response.statusText }));
+            throw new ApiError(response.status, body.error ?? body.message ?? 'Unknown error');
+        }
+
+        return (await response.json()) as Promise<T>;
     }
-
-    const response = await fetch(`${API_URL}${path}`, {
-        ...options,
-        headers,
-    });
-
-    if (!response.ok) {
-        const body = await response.json().catch(() => ({ error: response.statusText }));
-        throw new ApiError(response.status, body.error ?? body.message ?? 'Unknown error');
-    }
-
-    return (await response.json()) as Promise<T>;
 }
 
 export class ApiError extends Error {
