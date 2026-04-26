@@ -1,19 +1,21 @@
-export { AuthError, verifyToken } from './auth';
+export {
+    ProviderApiError,
+    ProviderError,
+    RateLimitError,
+    TokenExpiredError,
+} from './errors';
+
 export type {
     AuthorizationUrlParams,
     ContentItem,
     ContentProvider,
     FetchContentParams,
     TokenResult,
-} from './content-providers';
+} from './types';
+
 export {
     authorizationUrlParamsSchema,
     contentItemSchema,
     fetchContentParamsSchema,
-    ProviderApiError,
-    ProviderError,
-    RateLimitError,
-    TokenExpiredError,
     tokenResultSchema,
-} from './content-providers';
-export { getSupabase } from './supabase';
+} from './types';
