@@ -32,6 +32,10 @@ export class ApiClient {
             throw new ApiError(response.status, body.error ?? body.message ?? 'Unknown error');
         }
 
+        if (response.status === 204) {
+            return undefined as T;
+        }
+
         return (await response.json()) as Promise<T>;
     }
 }

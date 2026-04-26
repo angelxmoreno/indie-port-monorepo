@@ -59,7 +59,32 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 
 ## Implementation Tickets
 
-### Ticket A: Supabase Auth Phone Login Setup
+### Ticket A: Supabase Auth Phone Login Setup — ✅ DONE
+
+**Completed:**
+- [x] `packages/shared-types/src/auth.ts` — Zod schemas created
+- [x] `packages/shared-be/src/supabase.ts` — Supabase client initialization
+- [x] `packages/shared-be/src/auth.ts` — JWT verification helper
+- [x] `apps/api/src/middleware/auth.ts` — Auth middleware with lazy artist provisioning
+- [x] `apps/api/src/middleware/error-handler.ts` — Error handling
+- [x] `apps/api/src/index.ts` — Auth middleware applied, CORS added, `/api/me` route
+- [x] `packages/shared-fe/src/auth/auth-store.ts` — Zustand auth store with API sync
+- [x] `packages/shared-fe/src/api/client.ts` — ApiClient class with Bearer tokens
+- [x] `apps/dashboard/src/main.tsx` — ApiClient initialization
+- [x] Tests for auth middleware, `/api/me`, `ApiClient`, `verifyToken`
+- [x] CORS configured for cross-origin requests
+- [x] 401 handling in auth store (signOut on expired token)
+- [x] Subdomain uniqueness fix (full userId instead of slice)
+
+### Ticket B: Content Provider Interface — PENDING
+
+### Ticket C: OAuth Token Encryption — PENDING
+
+### Ticket D: Instagram OAuth Provider — PENDING
+
+### Ticket E: Content Sync Worker — PENDING
+
+### Ticket F: Token Refresh Worker — PENDING
 
 **Goal**: Configure Supabase Auth for phone OTP and create the FE auth state management.
 

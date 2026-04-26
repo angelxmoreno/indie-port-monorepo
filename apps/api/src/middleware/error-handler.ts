@@ -17,7 +17,6 @@ export function onError(err: Error, c: Context) {
     return c.json(
         {
             error: 'Internal Server Error',
-            message: err.message,
             status: 500,
         },
         500

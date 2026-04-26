@@ -1,4 +1,4 @@
-import { artists, db, eq } from '@indieport/database';
+import { artists, db } from '@indieport/database';
 import { AuthError, getSupabase, verifyToken } from '@indieport/shared-be';
 import type { Context, Next } from 'hono';
 import { HTTPException } from 'hono/http-exception';
@@ -42,12 +42,16 @@ export async function authMiddleware(
 }
 
 async function ensureArtistExists(userId: string) {
-    const [existing] = await db.select({ id: artists.id }).from(artists).where(eq(artists.userId, userId)).limit(1);
-
-    if (!existing) {
+    try {
         await db.insert(artists).values({
             userId,
             subdomain: userId,
         });
+    } catch (err) {
+        // Ignore unique constraint violations from concurrent requests
+        if (err instanceof Error && /unique constraint/i.test(err.message)) {
+            return;
+        }
+        throw err;
     }
 }

@@ -29,7 +29,11 @@ async function syncUserFromApi(): Promise<void> {
         useAuth.setState({ user });
     } catch (err) {
         if (err instanceof ApiError && err.status === 401) {
-            await useAuth.getState().signOut();
+            try {
+                await useAuth.getState().signOut();
+            } catch {
+                useAuth.setState({ user: null, accessToken: null });
+            }
             return;
         }
         // Keep existing user data for other errors

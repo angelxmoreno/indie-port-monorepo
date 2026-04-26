@@ -55,6 +55,9 @@ describe('authMiddleware', () => {
         mockVerifyToken.mockReset();
         mockDb.select.mockReset();
         mockDb.insert.mockReset();
+        mockDb.insert.mockImplementation(() => ({
+            values: mock(() => Promise.resolve([])),
+        }));
     });
 
     it('returns 401 when Authorization header is missing', async () => {
