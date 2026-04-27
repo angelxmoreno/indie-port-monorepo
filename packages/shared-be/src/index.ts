@@ -16,4 +16,5 @@ export {
     TokenExpiredError,
     tokenResultSchema,
 } from './content-providers';
+export { CryptoError, decrypt, encrypt } from './crypto';
 export { getSupabase } from './supabase';
