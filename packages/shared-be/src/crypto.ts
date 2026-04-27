@@ -17,7 +17,13 @@ function hexToBytes(hex: string): Uint8Array {
 }
 
 function base64Encode(bytes: Uint8Array): string {
-    return btoa(String.fromCharCode(...bytes));
+    const CHUNK_SIZE = 65534;
+    let binary = '';
+    for (let i = 0; i < bytes.length; i += CHUNK_SIZE) {
+        const chunk = bytes.subarray(i, i + CHUNK_SIZE);
+        binary += String.fromCharCode(...chunk);
+    }
+    return btoa(binary);
 }
 
 function base64Decode(str: string): Uint8Array {
