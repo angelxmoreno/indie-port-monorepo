@@ -76,7 +76,16 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - [x] 401 handling in auth store (signOut on expired token)
 - [x] Subdomain uniqueness fix (full userId instead of slice)
 
-### Ticket B: Content Provider Interface — PENDING
+### Ticket B: Content Provider Interface — ✅ DONE
+
+**Completed:**
+- [x] `packages/shared-be/src/providers/types.ts` — `ContentProvider` interface with 4 methods (getAuthorizationUrl, exchangeCodeForTokens, refreshToken, fetchContent)
+- [x] `packages/shared-be/src/providers/errors.ts` — ProviderError, TokenExpiredError, RateLimitError, ProviderApiError
+- [x] `packages/shared-be/src/providers/index.ts` — barrel export for provider types and errors
+- [x] `packages/shared-be/src/index.ts` — re-exports all provider interfaces, types, schemas, and errors
+- [x] Zod schemas: `tokenResultSchema`, `contentItemSchema`, `fetchContentParamsSchema`, `authorizationUrlParamsSchema`
+- [x] Tests for all provider error classes and Zod schemas
+- [x] `bun run validate` passes with zero errors
 
 ### Ticket C: OAuth Token Encryption — PENDING
 
