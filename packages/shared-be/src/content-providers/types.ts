@@ -32,7 +32,7 @@ export type FetchContentParams = z.infer<typeof fetchContentParamsSchema>;
 export const authorizationUrlParamsSchema = z.object({
     artistId: z.string().uuid(),
     state: z.string().min(1),
-    redirectUri: z.string(),
+    redirectUri: z.string().url(),
 });
 
 export type AuthorizationUrlParams = z.infer<typeof authorizationUrlParamsSchema>;
