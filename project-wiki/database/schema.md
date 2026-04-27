@@ -38,8 +38,8 @@ See [conventions.md](conventions.md) for column standards, soft-delete rules, na
 | id | uuid | PK, defaultRandom() |
 | artist_id | uuid | NOT NULL, FK → artists.id, ON DELETE CASCADE |
 | provider | enum(instagram, tiktok, youtube, spotify, soundcloud) | NOT NULL |
-| access_token | text | NOT NULL |
-| refresh_token | text | nullable |
+| access_token | text | NOT NULL (encrypted at rest with AES-256-GCM) |
+| refresh_token | text | nullable (encrypted at rest with AES-256-GCM) |
 | token_expires_at | timestamp | nullable |
 | scopes | text[] | NOT NULL, default [] |
 | created_at | timestamp | NOT NULL, defaultNow() |

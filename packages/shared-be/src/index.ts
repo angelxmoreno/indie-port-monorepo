@@ -17,4 +17,11 @@ export {
     tokenResultSchema,
 } from './content-providers';
 export { CryptoError, decrypt, encrypt } from './crypto';
+export type {
+    InstagramLongLivedToken,
+    InstagramMedia,
+    InstagramMediaItem,
+    InstagramShortLivedToken,
+} from './providers/instagram';
+export { InstagramContentProvider } from './providers/instagram';
 export { getSupabase } from './supabase';
