@@ -18,7 +18,7 @@ The API currently has only `/health`. Artists need CRUD endpoints to manage thei
 
 ## Files to Modify
 
-- `apps/api/src/index.ts` — mount all artist routes under `/artists` prefix, so routes compose to `/artists/me`, `/artists/me/connections`, and `/artists/me/content`
+- `apps/api/src/index.ts` — mount all artist routes under `/artists` prefix, so routes compose to `/artists/me`, `/artists/me/connections`, and `/artists/me/content`. Also enqueue `content-sync` and `token-refresh` BullMQ jobs on OAuth connection creation
 - `packages/shared-types/src/index.ts` — re-export API schemas
 
 ## Files to Reference
@@ -34,7 +34,8 @@ The API currently has only `/health`. Artists need CRUD endpoints to manage thei
 - `GET /artists/me` returns the authenticated artist's profile
 - `PATCH /artists/me` updates allowed fields and returns updated profile
 - `GET /artists/me/connections` lists active (non-deleted) social connections
-- `DELETE /artists/me/connections/:id` soft-deletes the connection (sets `deleted_at`)
+- `DELETE /artists/me/connections/:id` soft-deletes the connection (sets `deleted_at`) and removes scheduled BullMQ jobs for that connection
+- `GET /artists/me/connections` includes `needs_reauth` flag so dashboard can show reconnect prompts
 - `GET /artists/me/content` returns paginated content, filterable by `category` and `provider` query params
 - Error responses follow a consistent `{ error: string, code: string }` format
 - `bun run validate` passes with zero errors
@@ -46,6 +47,6 @@ feat(api): implemented artist, connection, and content CRUD routes
 
 - Added /artists/me, /artists/me/connections, and /artists/me/content endpoints
 - All routes protected by Supabase auth middleware
-- Soft-delete on connection removal, filtered queries on content
+- Soft-delete on connection removal removes scheduled BullMQ jobs
 - Structured error responses via global error handler
 ```

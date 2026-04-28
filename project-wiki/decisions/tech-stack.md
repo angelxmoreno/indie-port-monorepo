@@ -24,6 +24,8 @@
 | ORM | Drizzle |
 | Database | PostgreSQL (self-hosted Supabase) |
 | Auth | Supabase Auth |
+| Dependency injection | NovaDI |
+| Logging | Pino |
 
 ## Validation
 - **Zod** — Zod-First development: define schemas first, derive types from them
@@ -46,6 +48,21 @@
 | Staging | Home server via dokploy |
 | Production | Hetzner VPS + dokploy |
 | CDN/DDoS | Cloudflare (free tier, in front of VPS) |
+
+## Dependency Injection
+
+- **NovaDI** — decorator-free DI for TypeScript
+- Composition root pattern: all DI configuration at app entry points, business classes stay pure
+- Uses TypeScript transformer for autowiring (no decorators, no runtime reflection)
+- Applied in: `api`, `queue-service`, `cli`
+- Not applied in frontend apps (React has its own DI via context/props)
+
+## Logging
+
+- **Pino** — structured JSON logger
+- Shared utility in `packages/shared-be/src/logger.ts`
+- `createLogger(service)` returns a Pino child logger with `service` field
+- All BE services use it (API, queue-service, CLI)
 
 ## Encryption
 - OAuth tokens: at-rest encryption required (e.g., pgcrypto `pgp_sym_encrypt` or application-layer AES-GCM) before storing in DB

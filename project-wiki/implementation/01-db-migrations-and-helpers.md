@@ -30,6 +30,12 @@ The database schema in `packages/database/src/schema.ts` is fully defined (4 tab
 - All exports from `packages/database` are accessible via the package's main entry point
 - `bun run validate` passes with zero errors
 
+## Future Schema Changes
+
+The following columns will be added by later tickets (update schema here, then `bun run db:generate`):
+
+- `social_connections.needs_reauth` — boolean, NOT NULL, default false (from queue-infrastructure plan)
+
 ## Commit Message
 
 ```
