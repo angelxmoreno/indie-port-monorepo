@@ -18,7 +18,9 @@ mock.module('@indieport/database', () => ({
     db: {
         select: mock(() => createChainableMock([])),
         insert: mock(() => ({
-            values: mock(() => Promise.resolve([])),
+            values: mock(() => ({
+                onConflictDoNothing: mock(() => Promise.resolve([])),
+            })),
         })),
     },
     artists: {
@@ -56,7 +58,9 @@ describe('authMiddleware', () => {
         mockDb.select.mockReset();
         mockDb.insert.mockReset();
         mockDb.insert.mockImplementation(() => ({
-            values: mock(() => Promise.resolve([])),
+            values: mock(() => ({
+                onConflictDoNothing: mock(() => Promise.resolve([])),
+            })),
         }));
     });
 
@@ -119,7 +123,9 @@ describe('authMiddleware', () => {
         mockVerifyToken.mockResolvedValue(user);
         mockDb.select.mockImplementation(() => createChainableMock([]));
         mockDb.insert.mockImplementation(() => ({
-            values: mock(() => Promise.resolve([])),
+            values: mock(() => ({
+                onConflictDoNothing: mock(() => Promise.resolve([])),
+            })),
         }));
 
         const app = createApp({

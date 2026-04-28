@@ -42,16 +42,13 @@ export async function authMiddleware(
 }
 
 async function ensureArtistExists(userId: string) {
-    try {
-        await db.insert(artists).values({
+    await db
+        .insert(artists)
+        .values({
             userId,
             subdomain: userId,
+        })
+        .onConflictDoNothing({
+            target: artists.userId,
         });
-    } catch (err) {
-        // Ignore unique constraint violations from concurrent requests
-        if (err instanceof Error && /unique constraint/i.test(err.message)) {
-            return;
-        }
-        throw err;
-    }
 }

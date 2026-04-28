@@ -87,9 +87,25 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - [x] Tests for all provider error classes and Zod schemas
 - [x] `bun run validate` passes with zero errors
 
-### Ticket C: OAuth Token Encryption — PENDING
+### Ticket C: OAuth Token Encryption — ✅ DONE
 
-### Ticket D: Instagram OAuth Provider — PENDING
+**Completed:**
+- [x] `packages/shared-be/src/crypto.ts` — `encrypt(plaintext, key)` and `decrypt(ciphertext, key)` using AES-256-GCM via Web Crypto API
+- [x] `packages/shared-be/src/crypto.test.ts` — unit tests for roundtrip, tamper detection, and wrong-key rejection
+- [x] `packages/shared-be/src/index.ts` — re-exports `encrypt`, `decrypt`, and `CryptoError`
+- [x] `bun run validate` passes with zero errors
+
+### Ticket D: Instagram OAuth Provider — ✅ DONE
+
+**Completed:**
+- [x] `packages/shared-be/src/providers/instagram/client.ts` — `InstagramContentProvider` implementing `ContentProvider`
+- [x] `packages/shared-be/src/providers/instagram/types.ts` — Zod schemas for Instagram token and media responses
+- [x] `packages/shared-be/src/providers/instagram/index.ts` — barrel export
+- [x] `packages/shared-be/src/providers/instagram/client.test.ts` — 13 unit tests for auth URL, token exchange, refresh, content fetch, errors
+- [x] `apps/api/src/index.ts` — `GET /api/oauth/instagram` (protected) and `GET /api/oauth/instagram/callback` (public)
+- [x] State parameter encrypted with AES-256-GCM (10-minute expiry) for CSRF protection
+- [x] Tokens encrypted before storage in `social_connections` via Drizzle upsert
+- [x] `bun run validate` passes with zero errors
 
 ### Ticket E: Content Sync Worker — PENDING
 
@@ -168,16 +184,15 @@ Supabase Auth stores the phone number in `auth.users`. The `artists.userId` FK l
 - `packages/shared-be/src/providers/instagram/client.ts` — InstagramOAuthClient implementing ContentProvider
 - `packages/shared-be/src/providers/instagram/types.ts` — Zod schemas for Instagram-specific types
 - `packages/shared-be/src/providers/instagram/index.ts` — barrel export
-- `apps/api/src/routes/oauth/instagram.ts` — Hono routes: `GET /oauth/instagram` (redirect), `GET /oauth/instagram/callback` (exchange code, encrypt tokens, save to DB, enqueue content sync)
-- `packages/shared-be/src/providers/instagram/client.test.ts` — unit tests
+- `packages/shared-be/src/providers/instagram/client.test.ts` — unit tests for auth URL, token exchange, refresh, content fetch, errors, caption splitting, and cursor pagination
 
 **Files to Modify**:
-- `packages/shared-be/src/providers/index.ts` — barrel export
-- `apps/api/src/index.ts` — mount `/oauth` route group
+- `apps/api/src/index.ts` — added `requireEnv()` helper and two OAuth routes (`GET /api/oauth/instagram`, `GET /api/oauth/instagram/callback`)
+- `packages/shared-be/src/index.ts` — re-export `InstagramContentProvider` and Instagram types
 
 **Acceptance Criteria**:
-- `GET /oauth/instagram` redirects to Instagram consent screen with correct params
-- `GET /oauth/instagram/callback` exchanges code, encrypts tokens, saves to `social_connections`, enqueues `content.sync`
+- `GET /api/oauth/instagram` returns encrypted-state Instagram OAuth URL
+- `GET /api/oauth/instagram/callback` exchanges code, encrypts tokens, saves to `social_connections`
 - `ContentProvider` interface is fully implemented
 - `bun run validate` passes with zero errors
 

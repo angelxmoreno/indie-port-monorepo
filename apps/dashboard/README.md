@@ -45,6 +45,15 @@ cp .env.example .env
 4. API calls go through `apiClient` with `Authorization: Bearer <jwt>`
 5. API middleware validates JWT, lazy-creates artist row on first request
 
+## Instagram OAuth
+
+1. User clicks "Connect Instagram" in dashboard settings
+2. Dashboard calls `GET /api/oauth/instagram` (authenticated) → receives `{ authUrl }`
+3. Dashboard redirects to `authUrl` → user approves on Instagram
+4. Instagram redirects to `api.indieport.com/api/oauth/instagram/callback`
+5. API exchanges code for tokens, encrypts them, upserts into `social_connections`
+6. API redirects back to dashboard with `?connected=true` or `?connected=false&error=...`
+
 ## Prerequisites
 
 - API server running on port 3001 (`cd apps/api && bun run dev`)

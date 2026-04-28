@@ -1,5 +1,9 @@
 # 03 — OAuth Token Encryption
 
+## Status
+
+✅ DONE
+
 ## Goal
 
 Encrypt OAuth access tokens and refresh tokens at rest before storing them in the `social_connections` table, and decrypt them when the queue service needs to use them.
