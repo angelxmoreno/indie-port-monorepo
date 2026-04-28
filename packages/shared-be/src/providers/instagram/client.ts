@@ -26,7 +26,17 @@ function buildAuthUrl(params: URLSearchParams): string {
 
 function getRateLimitRetryMs(headers: Headers): number {
     const retryAfter = headers.get('retry-after');
-    if (retryAfter) return Number.parseInt(retryAfter, 10) * 1000;
+    if (!retryAfter) return 60000;
+
+    if (/^\d+$/.test(retryAfter)) {
+        return Number.parseInt(retryAfter, 10) * 1000;
+    }
+
+    const date = Date.parse(retryAfter);
+    if (!Number.isNaN(date)) {
+        return Math.max(0, date - Date.now());
+    }
+
     return 60000;
 }
 

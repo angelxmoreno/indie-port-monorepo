@@ -1,4 +1,4 @@
-import { and, artists, db, eq, socialConnections } from '@indieport/database';
+import { artists, db, eq, socialConnections, sql } from '@indieport/database';
 import type { TokenResult } from '@indieport/shared-be';
 import { decrypt, encrypt, InstagramContentProvider } from '@indieport/shared-be';
 import { Hono } from 'hono';
@@ -112,36 +112,30 @@ app.get('/api/oauth/instagram/callback', async (c) => {
         : null;
 
     try {
-        const existing = await db
-            .select()
-            .from(socialConnections)
-            .where(and(eq(socialConnections.artistId, artistId), eq(socialConnections.provider, 'instagram')))
-            .limit(1);
-
-        if (existing.length > 0) {
-            await db
-                .update(socialConnections)
-                .set({
-                    accessToken: encryptedAccessToken,
-                    refreshToken: encryptedRefreshToken,
-                    tokenExpiresAt: tokenResult.tokenExpiresAt,
-                    scopes: tokenResult.scopes,
-                    modifiedAt: new Date(),
-                })
-                .where(and(eq(socialConnections.artistId, artistId), eq(socialConnections.provider, 'instagram')));
-        } else {
-            await db.insert(socialConnections).values({
+        await db
+            .insert(socialConnections)
+            .values({
                 artistId,
                 provider: 'instagram',
                 accessToken: encryptedAccessToken,
                 refreshToken: encryptedRefreshToken,
                 tokenExpiresAt: tokenResult.tokenExpiresAt,
                 scopes: tokenResult.scopes,
+            })
+            .onConflictDoUpdate({
+                target: [socialConnections.artistId, socialConnections.provider],
+                targetWhere: sql`${socialConnections.deletedAt} IS NULL`,
+                set: {
+                    accessToken: encryptedAccessToken,
+                    refreshToken: encryptedRefreshToken,
+                    tokenExpiresAt: tokenResult.tokenExpiresAt,
+                    scopes: tokenResult.scopes,
+                    modifiedAt: new Date(),
+                },
             });
-        }
     } catch (err) {
-        const dbMessage = err instanceof Error ? err.message : 'db_error';
-        return c.redirect(`${dashboardUrl}/settings/instagram?connected=false&error=${encodeURIComponent(dbMessage)}`);
+        console.error('Failed to persist Instagram tokens:', err);
+        return c.redirect(`${dashboardUrl}/settings/instagram?connected=false&error=server_error`);
     }
 
     return c.redirect(`${dashboardUrl}/settings/instagram?connected=true`);

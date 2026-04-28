@@ -41,7 +41,7 @@ Instagram is the first provider per the provider decisions doc. The API needs to
 - Routes live directly in `apps/api/src/index.ts` instead of separate route files (simpler for two-endpoint feature)
 - State parameter is encrypted with AES-256-GCM and contains `{ artistId, nonce, issuedAt }`. Expires after 10 minutes.
 - Tokens are encrypted with AES-256-GCM before storage in `social_connections`
-- `onConflictDoUpdate` is used for atomic upsert on `(artist_id, provider)`
+- `onConflictDoUpdate` is used for atomic upsert on `(artist_id, provider)` with `targetWhere` matching the partial unique index (`deleted_at IS NULL`)
 - Content sync enqueue (BullMQ) is pending Ticket E
 - No separate `packages/shared-be/src/providers/index.ts` was needed — `shared-be/src/index.ts` imports directly from `./providers/instagram`
 
