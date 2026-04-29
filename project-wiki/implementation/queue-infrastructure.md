@@ -323,20 +323,6 @@ apps/queue-service/
 │       └── scheduler.test.ts       # Scheduler utility tests
 └── package.json
 
-apps/queue-service/
-├── src/
-│   ├── index.ts                    # App entry — connection, queues, workers, schedulers
-│   ├── queues.ts                   # Queue definitions (content-sync, token-refresh)
-│   ├── workers/
-│   │   ├── content-sync.ts         # Content sync worker logic
-│   │   └── token-refresh.ts        # Token refresh worker logic
-│   └── utils/
-│       ├── connection.ts           # DB connection lookup + token decrypt
-│       ├── reauth.ts               # Re-auth flagging
-│       ├── scheduler.ts            # Repeatable job registration
-│       ├── provider-config.ts      # PROVIDER_TOKEN_CONFIG constants
-│       └── logger.ts               # Structured logging
-
 packages/shared-be/src/providers/instagram/
 ├── client.ts                       # Existing — InstagramContentProvider class
 ├── content.ts                      # NEW — fetchInstagramContent() orchestration
@@ -470,10 +456,9 @@ Core logic lives in `shared-be` provider functions. Workers and CLI both call th
 | Retry strategy | 3 attempts, exponential backoff (5s base, 5min max) | Covers transient failures without overloading |
 | Token refresh timing | Provider-specific buffer before expiry | Different providers have different token TTLs. Buffer is configurable per provider |
 | Re-auth flag | `needs_reauth` column on `social_connections` | Simple boolean, easy to query, dashboard can show reconnect prompt |
-| Re-auth flag | `needs_reauth` column on `social_connections` | Simple boolean, easy to query, dashboard can show reconnect prompt |
 | Encryption key | Shared between API and queue-service | Workers must decrypt tokens stored by API. Same `ENCRYPTION_KEY` env var |
 | Logging | Pino (in `shared-be`) | All BE services need logging. Pino is fast, structured, and has pretty-print transport for CLI dev |
-| CLI tool | `apps/queue-service/src/cli/` | Reuses same code as workers. Manual testing before automated wiring. Not a separate app |
+| CLI app | `apps/cli` (standalone) | Broader scope than queue ops. No Redis dependency. Imports shared packages directly |
 | DI | NovaDI (composition root) | All BE apps use NovaDI. No decorators. Services stay pure. Wiring at entry point |
 | Provider token config | `PROVIDER_TOKEN_CONFIG` constant map | Each provider has different TTL + refresh buffer. Single source of truth |
 
