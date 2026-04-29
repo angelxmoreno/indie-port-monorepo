@@ -13,6 +13,8 @@ Both `shared-be` and `shared-fe` currently contain only `export {}`. The impleme
 - `packages/shared-be/src/constants.ts` — shared constants (queue names `content-sync`, `token-refresh`; Redis config defaults; provider enum values)
 - `packages/shared-be/src/errors.ts` — typed error classes (`AppError`, `AuthError`, `ProviderError`, `NotFoundError`) with HTTP status codes
 - `packages/shared-be/src/env.ts` — environment variable validation using Zod (required vars: `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ENCRYPTION_KEY`, `REDIS_URL`)
+- `packages/shared-be/src/logger.ts` — Pino logger setup. `createLogger(service: string)` returns a child logger with `service` field. Used by API, queue-service, and CLI
+- `packages/shared-be/src/di.ts` — NovaDI container setup. Shared registration of common services (database, logger, provider clients). Composition root for BE apps
 
 ## Files to Create — `shared-fe`
 
@@ -25,8 +27,8 @@ Both `shared-be` and `shared-fe` currently contain only `export {}`. The impleme
 
 ## Files to Modify
 
-- `packages/shared-be/src/index.ts` — re-export constants, errors, env
-- `packages/shared-be/package.json` — add `zod` dependency (for env validation)
+- `packages/shared-be/src/index.ts` — re-export constants, errors, env, logger, di
+- `packages/shared-be/package.json` — add `zod` dependency (for env validation), `pino` dependency (for logging), `@novadi/core` dependency (for DI)
 - `packages/shared-fe/src/index.ts` — re-export components, hooks, utils
 - `packages/shared-fe/package.json` — add `react` peer dependency if not present
 
@@ -37,7 +39,7 @@ Both `shared-be` and `shared-fe` currently contain only `export {}`. The impleme
 
 ## Acceptance Criteria
 
-- `shared-be` exports constants, error classes, and env validation
+- `shared-be` exports constants, error classes, env validation, Pino logger, and NovaDI container setup
 - `shared-fe` exports basic UI components and utility hooks
 - All Zod schemas follow Zod-First conventions (types derived from schemas)
 - No `any` types — proper typing throughout
@@ -48,7 +50,7 @@ Both `shared-be` and `shared-fe` currently contain only `export {}`. The impleme
 ```
 feat(shared): added foundational utilities to shared-be and shared-fe
 
-- Added constants, error classes, and env validation to shared-be
+- Added constants, error classes, env validation, Pino logger, and NovaDI setup to shared-be
 - Added Button, Input, Card components and utility hooks to shared-fe
 - Re-exported all new modules from package entry points
 ```

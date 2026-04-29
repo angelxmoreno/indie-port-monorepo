@@ -59,3 +59,15 @@
 6. Queue worker fetches content from provider → normalizes → saves to `content` table
 7. Queue worker enqueues a `token.refresh` repeatable job for that connection
 8. Portfolio reads from `content` table — zero dependency on provider availability
+
+## DI Architecture
+
+All backend apps (`api`, `queue-service`, `cli`) use **NovaDI** for dependency injection. Composition root pattern — services are pure TypeScript classes with no framework imports. All DI wiring happens at the app entry point.
+
+```
+apps/api/src/index.ts           → Container builder → resolve controllers, services
+apps/queue-service/src/index.ts → Container builder → resolve workers, utils
+apps/cli/src/index.ts            → Container builder → resolve commands
+```
+
+Shared services (`database`, `logger`, `provider clients`) are registered as singletons. Workers and controllers are registered per-dependency or per-request as needed.

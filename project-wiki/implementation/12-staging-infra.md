@@ -12,7 +12,8 @@ The tech stack specifies staging on a home server via Dokploy and production on 
 
 - `docker-compose.yml` (root) — development stack: PostgreSQL, Redis, Supabase (or just PG + Redis if Supabase runs separately)
 - `apps/api/Dockerfile` — multi-stage build for the Hono API
-- `apps/queue-service/Dockerfile` — multi-stage build for the BullMQ workers
+- `apps/queue-service/Dockerfile` — multi-stage build for the BullMQ workers (requires Redis)
+- `apps/cli/Dockerfile` — multi-stage build for the CLI app (optional, can also run locally without Docker)
 - `apps/portfolios/Dockerfile` — multi-stage build for Astro SSR
 - `apps/marketing-site/Dockerfile` — build-only (static output served by nginx or CDN)
 - `.env.example` — template with all required environment variables documented
@@ -32,7 +33,7 @@ The tech stack specifies staging on a home server via Dokploy and production on 
 
 ## Acceptance Criteria
 
-- `docker compose up` starts PostgreSQL and Redis locally
+- `docker compose up` starts PostgreSQL and Redis locally (Redis required by queue-service)
 - All apps build their Docker images successfully
 - `apps/api/src/config.ts` validates and exposes all required env vars
 - Portfolios app has a valid SSR adapter configured
@@ -45,7 +46,7 @@ The tech stack specifies staging on a home server via Dokploy and production on 
 ```
 feat(infra): added Docker configs, compose stack, and env validation
 
-- Created Dockerfiles for api, queue-service, portfolios, and
+- Created Dockerfiles for api, queue-service, CLI, portfolios, and
   marketing-site
 - Added docker-compose.yml with PostgreSQL and Redis
 - Centralized API config with env validation
