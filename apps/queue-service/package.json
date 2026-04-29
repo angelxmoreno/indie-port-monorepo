@@ -17,7 +17,7 @@
         "@indieport/database": "workspace:*",
         "@indieport/shared-be": "workspace:*",
         "@indieport/shared-types": "workspace:*",
-        "bullmq": "^5.76.1",
+        "bullmq": "^5.76.4",
         "ioredis": "^5.6.0"
     },
     "devDependencies": {
