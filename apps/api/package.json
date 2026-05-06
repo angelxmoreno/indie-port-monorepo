@@ -17,8 +17,8 @@
         "@indieport/database": "workspace:*",
         "@indieport/shared-be": "workspace:*",
         "@indieport/shared-types": "workspace:*",
-        "@supabase/supabase-js": "^2.104.1",
-        "hono": "^4.12.15"
+        "@supabase/supabase-js": "^2.105.3",
+        "hono": "^4.12.18"
     },
     "devDependencies": {
         "typescript": "^5.8.0",
